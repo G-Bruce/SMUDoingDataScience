@@ -1,0 +1,86 @@
+---
+title: "The dice Function"
+author: "Tom Tibbett - tptibbett@gmail.com"
+date: "September 5, 2017"
+output:
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE}
+# Hello there!
+
+# Quick Commands up front:
+# To create an R code block (like this!) - Ctrl+Shift+I
+# To run an R code block here - Ctrl+Shift+Enter
+# To Knit everything together, save the Rmd file, then... - Ctrl+Shift+K
+# This creates an HTML file in the same place as your Rmd file.  Submit both!
+
+# These instructions won't be visible in the HTML file because I have {r, echo=FALSE}
+# You'll want echo to be TRUE for each of your R blocks in HW submission unless stating otherwise
+# However, for industry engagements, maybe you don't want all your code out there. The option's there!
+
+# Keep in mind that hashtags in R blocks comment things out.  Outside the blocks, they denote headers!
+```
+
+## Background
+The function ```dice``` can be used to simulate dice rolls with multiple or atypically sided dice (i.e., four-sided dice, 100-sided dice).  There are three arguments to this function.
+
+* ```sides```: how many sides do the dice have?  The default is a standard six-sided die.
+* ```reps```: how many dice are you rolling at once?
+* ```adding```: Are there any modifiers you'd like to add after the dice are rolled?  You can add bonuses or levy penalties to a roll. The default is 0.
+
+To Do:
+
+* Create a variable that recognizes negative modifiers and have ```note``` return either ```+``` or ```-``` in the equation when printed.
+* Create boolean argument to print dice rolls for QA purposes.
+
+## Dice Function
+
+```{r, echo=TRUE}
+dice<-function(sides=6, reps, adding=0){
+  x<-sample(1:sides, size = reps, replace=TRUE) # With dice, you roll with replacement
+  total<-sum(x,na.rm = TRUE) + adding
+  note<-paste0(reps,"d",sides," + ", adding)
+  #print(note) # If you want to see the notation each time you roll, uncomment this part.
+  total
+}
+```
+
+Let's test it with 3 4-sided dice and adding 6.
+
+```{r, echo=TRUE}
+dice(sides=4, reps=3, adding=6)
+```
+
+## Rolls
+
+R is pretty good at doing mindless tasks in a loop.  It is very easy to form sampling distributions of the rolls from ```dice```.  As per the Central Limit Theorem, the resulting distribution of the totals should approach a normal distribution.  Of course, this is contingent on how many times you sample.  For this example, in the below code, I rolled 5 six-sided dice and added six.  Then I did that 499 more times for a 500-element vector of Totals, listed below.
+
+```{r, echo=TRUE}
+rolls<-0 # Initializing a numeric vector of Totals
+for (i in 1:500){
+  x<-dice(sides=6, reps=5, adding=6) # Creates a Total
+  rolls[i]<-x # Adds this loop's total to the vector of Totals
+}
+rolls
+```
+
+## Histogram of Rolls
+
+```{r, echo=TRUE}
+hist(rolls, main = "How often a total was rolled", xlab = "Dice roll total", col = "darkgreen")
+```
+
+```{r, echo=FALSE}
+# Some takehome points:
+# On your future homeworks, be sure to submit them as Rmarkdown/R Notebook files
+# When you knit this together, there will be a .Rmd file and a .HTML file.  Submit both!
+# Be sure to use echo=TRUE whenever you can.  It helps the grader see not only your plots, but what you coded to get them.
+# Hashtags are different when they are out of R blocks
+# Above all else, document everything.  The grader will send stuff back with his/her own comments.
+```
