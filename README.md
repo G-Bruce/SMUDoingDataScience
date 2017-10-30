@@ -14,15 +14,19 @@ I plan on having one folder for each semester that I have created material.  Bel
      * Demo.Rmd
      * Demo.md
      * Demo.html
+
     * Unit2
      * Demo2.Rmd
      * Demo2.md
      * Demo2.html
+
     * ...
+    
     * UnitN
      * DemoN.Rmd
      * DemoN.md
      * DemoN.html 
+    
     * Readme.md - Topics for each unit
 * **data**: the data sets called for the Demo activities
     * data.csv
