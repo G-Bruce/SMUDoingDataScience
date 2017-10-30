@@ -1,0 +1,83 @@
+---
+title: "Tidy Data - A Primer"
+author: "Tom Tibbett"
+output:
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Disclaimer: These are not real data.  They have been fabricated for instructional purposes.
+
+### Live Coding Session Demo
+First, let's read in, well, read_in.txt.  This file is tab delimited with no headers.  My client informed me what the column names are.
+
+```{r, echo=TRUE}
+df <- read.table("../../data/read_in.txt", sep="\t", header=FALSE, col.names = c("Name", "ID", "IQ", "Grades", "Legs"))
+head(df)
+```
+
+Next, let's take a look at some of the summary information.
+
+```{r, echo=TRUE}
+summary(df)
+unique(df$Legs)
+```
+
+Hmm... that's weird that someone has three legs.  I ought to go back and ask the client about what the Legs column means!
+
+### Splitting a Name
+
+We'll be using the reshape2 package as an alternative to the Lecture Assignments.  With R, you have options in what library you use.
+
+I'm going to use colsplit(), because it's a quick way of cutting out names if there's an obvious separator.  Here, we have an underscore.
+
+```{r, echo=TRUE}
+library("reshape2")
+vars<-colsplit(df$Name, "_", names=c("FirstName", "LastName"))
+df<-cbind(vars, df) # Adding it back to the original dataframe.
+head(df)
+```
+
+### Searching with grep
+
+First off, remember that subsetting dataframes is as simple as ```df[{row}, {column}]```.
+
+* df[1,] - if you want the first row and all columns
+* df[1, c(1,2)] - if you want the first row and columns 1 and 2
+* df[1, c("ID", "Gophers")] - Same deal, but with explicit names
+
+You can even use logical statements to affect your dataframe.
+
+* df[which(df$Legs==3),] - To find the row(s) which there are persons with three legs.
+* df[which(df$Legs < 3),] - To find the row(s) which there are persons with less than three legs.
+* df[order(df$IQ), ] - To sort your dataframe by ascending IQ score
+
+To find a particular pattern within strings, you can format things similarly to the df[row, columns] structure. Using regular expression syntax, which I highly recommend you read up using ```?grep```, you can search for and display matches to patterns in your character data.
+
+My client would like to see all the people with last names that start with "Pa."
+
+* ```^``` indicates you want to make sure this is at the start of a string.
+* ```[Pp]``` indicates the first character should be either a P or a p.
+* ```a``` indicates the next letter should be a lowercase a.
+* So, a match here indicates that a last name starts with either 'Pa' or 'pa.'
+
+```{r, echo=TRUE}
+df[grep('^[Pp]a', df$LastName),]
+```
+
+### Reports
+
+Now I can put all of this together to create reports my client needs.
+
+* Ordering by descending IQ
+* Including First Name and Last Name
+* Dropping all other variables
+
+```{r}
+report<-df[order(-df$IQ),c("FirstName", "LastName", "IQ")]
+report
+```
