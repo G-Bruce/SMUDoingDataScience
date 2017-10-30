@@ -1,6 +1,6 @@
 # SMUDoingDataScience
 ### Introduction
-In this repository, I have uploaded and adapted R code in order to demonstrate some ways of Doing Data Science.  I have adapted the R scripts to create R Markdown files which explicitly document files as though I were teaching.  Activities range from very basic Introductions to complex topics like Financial Modeling.  I will release new code as I create it, usually the week after assigning the relevant homework.
+In this repository, I have uploaded and adapted R code in order to demonstrate some ways of Doing Data Science.  I have adapted my original R scripts to create R Markdown files which explicitly document files as though I were teaching.  Activities range from very basic Introductions to complex topics like Financial Modeling.  I will release new code as I create it, usually the week after assigning the relevant homework.
 
 You should use RStudio to view things like the .RMD file, but I do my best to keep the .md with relevant pictures, so you can view all output on GitHub, without having to clone things yourself.  This is a work in progress!
 
