@@ -7,12 +7,15 @@ How to interact with GitHub
 * Navigate to the folder you want the repo in
 
 cd stands for 'change directory'
+
 ```cd Documents/1\ SMU/DoingDataScience/Unit4```
 
 Clone the repository.  On GitHub, the root directory has a Clone button to receive the link.
+
 ```git clone https://github.com/tptibbett/SMUDoingDataScience.git```
 
 Navigate into that folder
+
 ```cd SMUDoingDataScience```
 
 To push something to GitHub:
