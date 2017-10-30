@@ -1,0 +1,157 @@
+---
+title: "The Case Study - A Walkthrough"
+author: "Tom Tibbett"
+output:
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Disclaimer: It is important to note that this focuses most on the coding questions, but not the presentation aspect of the Case Study.  While you can use this for reference, it is not a true answer key.  I solved most of this with dplyr.
+
+### Libraries and Import
+
+
+```{r, echo=TRUE}
+library('dplyr')
+library('ggplot2')
+
+beers<-read.csv('../../data/Beers.csv')
+brews<-read.csv('../../data/Breweries.csv')
+
+head(beers)
+head(brews)
+```
+
+How many breweries are in each state?
+
+```{r, echo=TRUE}
+ct<-data.frame(count(brews, brews$State))
+names(ct) <- c("State", "Count")
+ct[order(-ct$Count),]
+```
+
+### Merging the Data
+
+Next, we should merge beers and breweries on their ID values.  You can either rename both to the same value OR you can use by.x and by.y to match differently named columns that relate to each other.
+
+```{r, echo=TRUE}
+df<-merge(beers, brews, by.x="Brewery_id", by.y="Brew_ID")
+names(df)<- c("BreweryID","BeerName", "BeerID", "ABV","IBU","Style","Ounces","Company","City","State")
+```
+
+### Print the First and Last Six
+
+I chose to row-bind ```head()``` and ```tail()``` in order to show both.
+
+```{r, echo=TRUE}
+rbind(head(df),tail(df))
+```
+
+### Exploring NA values
+
+Our client was curious how much data is missing.  To check all rows in one pass:
+
+```{r, echo=TRUE}
+sapply(X=df, FUN=function(x) sum(is.na(x)))
+colSums(is.na(df))
+```
+
+### Advanced dplyr use
+
+How about the median for each state?  You can use piping to use several dplyr functions at once.  Here's what this bit of code says in plain English
+
+* ```select()``` only the State and ABV columns; I do not need anything else.
+* ```group_by()``` the State in terms of alcohol content
+* ```summarize()``` this subset; I want to create a variable called MedianABV, which is the median, absent NAs, rounded to 4 digits.
+* ```arrange()``` it in descending order by this new variable, MedianABV.
+
+Essentially, I want it to show me the top States for ABV in terms of the typical beer.
+
+```{r, echo=TRUE}
+AB <- df %>%
+  select(State, ABV) %>%
+  group_by(State) %>%
+  summarize(MedianABV=round(median(ABV, na.rm=TRUE),4)) %>%
+  arrange(desc(MedianABV))
+
+data.frame(AB)  
+```
+
+I'll do the same thing here with International Bitterness Units, but I choose to round to five digits instead.
+
+```{r, echo=TRUE}
+IB<-df %>% # I use dplyr here to do all my steps simultaneously, but you can do this piecemeal in base R, too
+  select(State, IBU) %>%
+  group_by(State) %>%
+  summarize(MedianIBU=round(median(IBU, na.rm=TRUE),5)) %>% # I chose to round to five digits here
+  arrange(desc(MedianIBU)) # I put them in descending order because my clients are most interested in higher values
+data.frame(IB)
+```
+
+### ggplot and Categories
+
+The next task was to graph things to look for patterns.  For ABV, I do the following with this code chunk:
+
+* Reorder the bars in descending order, rather than alphabetical by State.
+* Manifest a bar chart, making the fill contingent on the State value in the observation.
+* Create an informative title.
+* Center that title.
+* Label the x and y axis in detail.
+* Flip the coordinates -- frequently with categories, the axis values become scrunched.
+
+```{r, echo=TRUE, include=TRUE}
+ggplot(AB, aes(reorder(State, MedianABV), MedianABV)) + # I chose to reorder the bars in descending order, rather than alphabetical  
+  geom_bar(aes(fill=State), stat="identity") + # the bar colors and what the values mean
+  ggtitle("Median ABV by State") + # The Title
+  theme(plot.title = element_text(hjust = 0.5)) + # Centers the Title
+  xlab("State\n\n") + # Gives an X-axis name
+  ylab("Typical Alcohol Content for Craft Beer") + # Gives an informative Y-axis name
+  coord_flip() # Flips the coordinates - I do this because it's easier to see States on the Y-Axis
+```
+
+I'll do the same thing for IBUs.  However, I noticed earlier that some states had no values.  I opt to remove NA values in the first row of this code chunk.
+
+```{r, echo=TRUE, include=TRUE}
+ggplot(IB[!is.na(IB$MedianIBU),], aes(reorder(State, MedianIBU), MedianIBU)) + # I saw that SD had an NA for Bitterness - let's remove
+  geom_bar(aes(fill=State), stat="identity") +
+  ggtitle("Median IBU by State") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("State\n\n") +
+  ylab("Typical Bitterness for Craft Beer") +
+  coord_flip()
+```
+
+### Summaries Based on Data
+
+Another objective was to note the most bitter and most alcohol beer.  I also included relevant information, the Name, ABV/IBU, and State.
+
+```{r, echo=TRUE}
+# Which state has the maximum alcoholic beer?
+df[which.max(df$ABV),c("State","BeerName","ABV")]
+
+# Which state has the most bitter beer?
+df[which.max(df$IBU),c("State","BeerName","IBU")]
+
+```
+
+You can also use ggplot to create scatterplots.  One ask in the Case Study was to ascertain whether there was a relationship between ABV and IBUs.  I omit the legend and color by State.
+
+```{r, echo=TRUE, include=TRUE}
+ggplot(df, aes(ABV, IBU)) +
+  geom_point(aes(color=State), show.legend=FALSE) + # Color the observations by State
+  ggtitle("Potential Relationship between ABV and IBU") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Alcohol Content") +
+  ylab("Bitterness") +
+  coord_flip()
+```
+
+You can also actually statistically analyze whether there is a relationship.  Consider this linear relationship.
+
+```{r, echo=TRUE}
+summary(lm(ABV~IBU, data=df))
+```
