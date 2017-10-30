@@ -172,11 +172,11 @@ df</code></pre>
 <p>If you notice, there are some issues with simply splitting columns by spaces, like we did we Team1’s variables and Team2’s. Teams like “Green Bay” have two spaces before their score. We’ll have to devise another strategy. One way is regular expressions. I highly recommend researching <code>regex</code> online.</p>
 <p>Here, I do the following in order.</p>
 <ul>
-<li>[ ] - match a single character present in the set: here I chose a space.</li>
-<li>(?= ) - positive lookahead</li>
-<li>[^ ] - match a single character NOT present in the set: here I chose not a space</li>
-<li>+ - matches at least once</li>
-<li>$ - asserts position at the end of the line</li>
+<li><code>[ ]</code> - match a single character present in the set: here I chose a space.</li>
+<li><code>(?= )</code> - positive lookahead</li>
+<li><code>[^ ]</code> - match a single character NOT present in the set: here I chose not a space</li>
+<li><code>+</code> - matches at least once</li>
+<li><code>$</code> - asserts position at the end of the line</li>
 </ul>
 <p>So, it says:</p>
 <ul>

@@ -104,11 +104,11 @@ If you notice, there are some issues with simply splitting columns by spaces, li
 
 Here, I do the following in order.
 
-* [ ] - match a single character present in the set: here I chose a space.
-* (?= ) - positive lookahead
-* [^ ] - match a single character NOT present in the set: here I chose not a space
-* \+ - matches at least once
-* $ - asserts position at the end of the line
+* ```[ ]``` - match a single character present in the set: here I chose a space.
+* ```(?= )``` - positive lookahead
+* ```[^ ]``` - match a single character NOT present in the set: here I chose not a space
+* ```+``` - matches at least once
+* ```$``` - asserts position at the end of the line
  
 So, it says:
 
