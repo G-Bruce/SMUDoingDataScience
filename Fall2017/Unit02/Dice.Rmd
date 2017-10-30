@@ -1,7 +1,6 @@
 ---
-title: "The dice Function"
-author: "Tom Tibbett - tptibbett@gmail.com"
-date: "September 5, 2017"
+title: "Introduction to R - The dice Function"
+author: "Tom Tibbett"
 output:
   html_document:
     keep_md: true
