@@ -1,4 +1,4 @@
-# SMUDoingDataScience
+# Live Session Demos in Data Science
 ### Introduction
 In this repository, I have uploaded and adapted R code in order to demonstrate some ways of Doing Data Science.  I have adapted my original R scripts to create R Markdown files which explicitly document files as though I were teaching.  Activities range from very basic Introductions to complex topics like Financial Modeling.  I will release new code as I create it, usually the week after assigning the relevant homework.
 
