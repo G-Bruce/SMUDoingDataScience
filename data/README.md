@@ -61,6 +61,8 @@ Miscellaneous Information
 
 ### OWLexamresults.csv
 
+Ordinary Wizarding Level exam results
+
 * Type: Comma-separated value file
 * Dimensions: 206 observations X 4 variables
 * Unit Used: Reproducible Research
@@ -74,6 +76,8 @@ Variable Information: Correct Class
 * Pass: How many O.W.L. exams the student passed: numeric
 
 ### read_in.txt
+
+Sample demographic information to be cleaned
 
 * Type: Tab-separated text file
 * Dimensions: 154 observations X 5 variables
