@@ -72,7 +72,7 @@ rolls
 
 ## Histogram of Rolls
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, include=TRUE}
 hist(rolls, main = "How often a total was rolled", xlab = "Dice roll total", col = "darkgreen")
 ```
 
